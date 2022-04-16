@@ -1,0 +1,39 @@
+model User {
+  id    Int    @id @default(autoincrement())
+  name  String
+  trips TripsOnUsers[]
+  fuels Fuel[]
+}
+
+model Car {
+  id           Int    @id @default(autoincrement())
+  name         String
+  fuelCapacity Float
+}
+
+model Trip {
+  id       Int            @id @default(autoincrement())
+  name     String
+  distance Float
+  date     DateTime       @default(now())
+  users    TripsOnUsers[]
+}
+
+model TripsOnUsers {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  trip   Trip @relation(fields: [tripId], references: [id])
+  tripId Int
+
+  @@id([userId, tripId])
+}
+
+model Fuel {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
+  amount      Float
+  cost        Float
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      Int?
+  percentFull Float
+}
