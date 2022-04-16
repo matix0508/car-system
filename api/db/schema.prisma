@@ -9,7 +9,29 @@ generator client {
 }
 
 model User {
-  id             Int    @id @default(autoincrement())
-  name           String
-  hashedPassword String
+  id                  Int            @id @default(autoincrement())
+  email               String         @unique
+  hashedPassword      String
+  salt                String
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+  trips               TripsOnUsers[]
+}
+
+model Trip {
+  id       Int            @id @default(autoincrement())
+  name     String
+  distance Float
+  date     DateTime
+  users    TripsOnUsers[]
+}
+
+model TripsOnUsers {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  trip   Trip @relation(fields: [tripId], references: [id])
+  tripId Int
+
+  @@unique([userId, tripId])
 }
